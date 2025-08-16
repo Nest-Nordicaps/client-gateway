@@ -10,7 +10,7 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 
-import { PRODUCT_SERVICE } from '../config/service';
+import { NATS_SERVICE } from 'src/config';
 import { ClientProxy } from '@nestjs/microservices';
 
 import { CreateProductDto } from './dto/create-product.dto';
@@ -19,8 +19,8 @@ import { UpdateProductDto } from './dto/update-product.dto';
 @Controller('products')
 export class ProductsController {
   constructor(
-    @Inject(PRODUCT_SERVICE) private readonly productsClient: ClientProxy,
-  ) {}
+    @Inject(NATS_SERVICE) private readonly productsClient: ClientProxy,
+  ) {} // TODO: Se agrego el proxy de NATS (PROBAR)
 
   @Post()
   createProduct(@Body() createProductDto: CreateProductDto) {
