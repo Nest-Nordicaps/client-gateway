@@ -20,7 +20,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 export class ProductsController {
   constructor(
     @Inject(NATS_SERVICE) private readonly productsClient: ClientProxy,
-  ) {} // TODO: Se agrego el proxy de NATS (PROBAR)
+  ) {}
 
   @Post()
   createProduct(@Body() createProductDto: CreateProductDto) {
