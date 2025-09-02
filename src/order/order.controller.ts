@@ -23,7 +23,7 @@ export class OrderController {
   ) {}
 
   @Post()
-  createOrder(createOrderDto: CreateOrderDto) {
+  createOrder(@Body() createOrderDto: CreateOrderDto) {
     return this.orderClient.send({ cmd: 'create_order' }, createOrderDto);
   }
 
