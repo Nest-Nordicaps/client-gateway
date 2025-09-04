@@ -1,18 +1,20 @@
 import 'dotenv/config';
-import * as Joi from 'joi';
+import * as joi from 'joi';
 
 interface EnvVars {
   PORT: number;
 
-  NATS_SERVERS: string;
+  NATS_SERVERS: string[];
 }
 
-const envsSchema = Joi.object({
-  PORT: Joi.number().required(),
-  NATS_SERVERS: Joi.array().items(Joi.string()).required(),
-  // PRODUCTS_MICROSERVICE_HOST: Joi.string().required(),
-  // PRODUCTS_MICROSERVICE_PORT: Joi.number().required(),
-}).unknown(true);
+const envsSchema = joi
+  .object({
+    PORT: joi.number().required(),
+    NATS_SERVERS: joi.array().items(joi.string()).required(),
+    // PRODUCTS_MICROSERVICE_HOST: joi.string().required(),
+    // PRODUCTS_MICROSERVICE_PORT: joi.number().required(),
+  })
+  .unknown(true);
 
 const { error, value } = envsSchema.validate({
   ...process.env,

@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
   Inject,
   Param,
@@ -14,23 +13,20 @@ import { ClientProxy } from '@nestjs/microservices';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { NATS_SERVICE } from 'src/config';
 import { StatusDto } from './dto/status.dto';
-import { firstValueFrom } from 'rxjs';
 
 @Controller('orders')
 export class OrderController {
-  constructor(
-    @Inject(NATS_SERVICE) private readonly orderClient: ClientProxy,
-  ) {}
+  constructor(@Inject(NATS_SERVICE) private readonly client: ClientProxy) {}
 
   @Post()
   createOrder(@Body() createOrderDto: CreateOrderDto) {
-    return this.orderClient.send({ cmd: 'create_order' }, createOrderDto);
+    return this.client.send({ cmd: 'create_order' }, createOrderDto);
   }
 
   @Get()
   findAll() {
     try {
-      return this.orderClient.send({ cmd: 'find_all_orders' }, {});
+      return this.client.send({ cmd: 'find_all_orders' }, {});
       // const order = await firstValueFrom(
       //   this.orderClient.send({ cmd: 'find_all_orders' }, {}),
       // ); // El firstValueFrom convierte el Observable en una promesa y espera su resolucion
@@ -42,7 +38,7 @@ export class OrderController {
 
   @Get('id/:id')
   async findOne(id: number) {
-    return this.orderClient.send({ cmd: 'find_one_order' }, { id });
+    return this.client.send({ cmd: 'find_one_order' }, { id });
   }
 
   @Patch(':id')
@@ -51,7 +47,7 @@ export class OrderController {
     @Body() statusDto: StatusDto,
   ) {
     try {
-      return this.orderClient.send(
+      return this.client.send(
         { cmd: 'update_order' },
         {
           id,

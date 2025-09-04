@@ -18,26 +18,21 @@ import { UpdateProductDto } from './dto/update-product.dto';
 
 @Controller('products')
 export class ProductsController {
-  constructor(
-    @Inject(NATS_SERVICE) private readonly productsClient: ClientProxy,
-  ) {}
+  constructor(@Inject(NATS_SERVICE) private readonly client: ClientProxy) {}
 
   @Post()
   createProduct(@Body() createProductDto: CreateProductDto) {
-    return this.productsClient.send(
-      { cmd: 'create_product' },
-      createProductDto,
-    );
+    return this.client.send({ cmd: 'create_product' }, createProductDto);
   }
 
   @Get()
   findAll() {
-    return this.productsClient.send({ cmd: 'find_all_products' }, {});
+    return this.client.send({ cmd: 'find_all_products' }, {});
   }
 
   @Get(':id')
   findOne(@Param('id') id: number) {
-    return this.productsClient.send({ cmd: 'find_product' }, { id });
+    return this.client.send({ cmd: 'find_product' }, { id });
   }
 
   @Patch(':id')
@@ -46,7 +41,7 @@ export class ProductsController {
     @Body() updateProductDto: UpdateProductDto,
   ) {
     // return this.productsService.update(+id, updateProductDto);
-    return this.productsClient.send(
+    return this.client.send(
       { cmd: 'update_product' },
       { id, ...updateProductDto },
     );
@@ -55,6 +50,6 @@ export class ProductsController {
   @Delete(':id')
   remove(@Param('id') id: number) {
     // return this.productsService.remove(+id);
-    return this.productsClient.send({ cmd: 'remove_product' }, { id });
+    return this.client.send({ cmd: 'remove_product' }, { id });
   }
 }
