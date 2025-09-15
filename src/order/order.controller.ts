@@ -13,6 +13,8 @@ import { ClientProxy } from '@nestjs/microservices';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { NATS_SERVICE } from 'src/config';
 import { StatusDto } from './dto/status.dto';
+import { PaginationDto } from 'src/common/pagination.dto';
+import { firstValueFrom } from 'rxjs';
 
 @Controller('orders')
 export class OrderController {
@@ -23,14 +25,16 @@ export class OrderController {
     return this.client.send({ cmd: 'create_order' }, createOrderDto);
   }
 
-  @Get()
-  findAll() {
+  @Get() //TODO: Seguir con el servicio en Order-ms
+  async findAll(@Query() paginationDto: PaginationDto) {
+    // Recibe los datos de la peticion por query
     try {
-      return this.client.send({ cmd: 'find_all_orders' }, {});
-      // const order = await firstValueFrom(
-      //   this.orderClient.send({ cmd: 'find_all_orders' }, {}),
-      // ); // El firstValueFrom convierte el Observable en una promesa y espera su resolucion
-      // return order;
+      // return this.client.send({ cmd: 'find_all_orders' }, { paginationDto });
+      const orders = await firstValueFrom(
+        this.client.send({ cmd: 'find_all_orders' }, { paginationDto }),
+      ); // El firstValueFrom convierte el Observable en una promesa y espera su resolucion
+
+      return orders;
     } catch (error) {
       throw new Error(`Error fetching orders: ${error.message}`);
     }
