@@ -3,8 +3,9 @@ import { ProductsModule } from './products/products.module';
 import { NatsModule } from './transports/nats.module';
 import { OrderModule } from './order/order.module';
 import { AuthModule } from './auth/auth.module';
+import { PaymentsModule } from './payments/payments.module';
 
 @Module({
-  imports: [ProductsModule, NatsModule, OrderModule, AuthModule],
+  imports: [ProductsModule, NatsModule, OrderModule, AuthModule, PaymentsModule],
 })
 export class AppModule {}
