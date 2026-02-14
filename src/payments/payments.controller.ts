@@ -24,4 +24,6 @@ export class PaymentsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {}
+
+  
 }

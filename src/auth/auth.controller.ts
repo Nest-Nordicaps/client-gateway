@@ -1,10 +1,13 @@
-import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Post, UseGuards } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { NATS_SERVICE } from 'src/config';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { catchError } from 'rxjs';
-import { error } from 'console';
 import { LoginUserDto } from './dto/login-user.dto';
+import { AuthGuard } from './guards/auth.guard';
+import { User } from './decorator/user.decorator';
+import { CurrentUser } from './interfaces/current-user.interface';
+import { Token } from './decorator/token.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -28,8 +31,11 @@ export class AuthController {
     );
   }
 
+  @UseGuards(AuthGuard)
   @Get('verify')
-  verifyToken() {
-    return this.client.send('auth.verify.token', {});
+  verifyToken(@User() user: CurrentUser, @Token() token: string) {
+    //Traemos el user y el token del custom decorator
+
+    return { user, token };
   }
 }
